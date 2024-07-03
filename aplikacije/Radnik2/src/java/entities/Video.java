@@ -36,12 +36,6 @@ import javax.xml.bind.annotation.XmlTransient;
 public class Video implements Serializable 
 {
 
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "idVideo")
-    private Integer idVideo;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 255)
@@ -52,13 +46,20 @@ public class Video implements Serializable
     @NotNull
     @Column(name = "Trajanje")
     private BigDecimal trajanje;
-    @Column(name = "idKorisnik")
-    private Integer idKorisnik;
     @Basic(optional = false)
     @NotNull
     @Column(name = "DatumPostavljanja")
     @Temporal(TemporalType.TIMESTAMP)
     private Date datumPostavljanja;
+
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "idVideo")
+    private Integer idVideo;
+    @Column(name = "idKorisnik")
+    private Integer idKorisnik;
     @ManyToMany(mappedBy = "videoList")
     private List<Kategorija> kategorijaList;
 
@@ -89,25 +90,6 @@ public class Video implements Serializable
         this.idVideo = idVideo;
     }
 
-    public String getNaziv()
-    {
-        return naziv;
-    }
-
-    public void setNaziv(String naziv)
-    {
-        this.naziv = naziv;
-    }
-
-    public BigDecimal getTrajanje()
-    {
-        return trajanje;
-    }
-
-    public void setTrajanje(BigDecimal trajanje)
-    {
-        this.trajanje = trajanje;
-    }
 
     public Integer getIdKorisnik()
     {
@@ -119,15 +101,6 @@ public class Video implements Serializable
         this.idKorisnik = idKorisnik;
     }
 
-    public Date getDatumPostavljanja()
-    {
-        return datumPostavljanja;
-    }
-
-    public void setDatumPostavljanja(Date datumPostavljanja)
-    {
-        this.datumPostavljanja = datumPostavljanja;
-    }
 
     @XmlTransient
     public List<Kategorija> getKategorijaList()
@@ -168,6 +141,36 @@ public class Video implements Serializable
     public String toString()
     {
         return "entities.Video[ idVideo=" + idVideo + " ]";
+    }
+
+    public String getNaziv()
+    {
+        return naziv;
+    }
+
+    public void setNaziv(String naziv)
+    {
+        this.naziv = naziv;
+    }
+
+    public BigDecimal getTrajanje()
+    {
+        return trajanje;
+    }
+
+    public void setTrajanje(BigDecimal trajanje)
+    {
+        this.trajanje = trajanje;
+    }
+
+    public Date getDatumPostavljanja()
+    {
+        return datumPostavljanja;
+    }
+
+    public void setDatumPostavljanja(Date datumPostavljanja)
+    {
+        this.datumPostavljanja = datumPostavljanja;
     }
 
 }

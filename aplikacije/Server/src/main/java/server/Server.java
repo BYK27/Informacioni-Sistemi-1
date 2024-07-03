@@ -1,5 +1,8 @@
 package server;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Resource;
@@ -203,6 +206,149 @@ public class Server
         return Response.serverError().build();
     }
     
+    @POST
+    @Path("query6/{Naziv}/{Trajanje}/{Korisnik}/{DatumPostavljanja}")
+    public Response createVideo(@PathParam("Naziv") String Naziv, @PathParam("Trajanje") Double Trajanje, @PathParam("Korisnik") String Korisnik, @PathParam("DatumPostavljanja") String DatumPostavljanja )
+    {
+        JMSContext context = connectionFactory.createContext();
+        JMSProducer producer = context.createProducer();
+        JMSConsumer consumer = context.createConsumer(queueRadnik2Server);
+        //return Response.ok("usao u ovo sranje", MediaType.TEXT_PLAIN).build();
+        
+        System.err.println("AAAAAAA");
+        
+        try
+        {
+            String naziv = Naziv;
+            String datumString = DatumPostavljanja;
+            
+            naziv = URLDecoder.decode(Naziv, StandardCharsets.UTF_8.toString());
+            datumString = URLDecoder.decode(DatumPostavljanja, StandardCharsets.UTF_8.toString());
+            
+            ObjectMessage objectMessage = context.createObjectMessage();
+            objectMessage.setIntProperty("QueryNumber", 6);
+            objectMessage.setStringProperty("Naziv", naziv);
+            objectMessage.setDoubleProperty("Trajanje", Trajanje);
+            objectMessage.setStringProperty("Korisnik", Korisnik);
+            objectMessage.setStringProperty("DatumPostavljanja", datumString);
+            producer.send(queueServerRadnik2, objectMessage);
+            Message message = consumer.receive();
+            if(message instanceof ObjectMessage && ((ObjectMessage)message).getObject() != null)
+            {
+                return Response.status(Response.Status.CREATED).entity("successful query 6 - Create Video.").build();
+            }
+        } 
+        catch (JMSException | UnsupportedEncodingException ex)
+        {
+            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        finally
+        {
+            consumer.close();
+        }
+        
+        return Response.serverError().build();
+    }
+    
+    @POST
+    @Path("query7/{NazivOld}/{NazivNew}")
+    public Response updateNaziv(@PathParam("NazivOld") String NazivOld, @PathParam("NazivNew") String NazivNew)
+    {
+        JMSContext context = connectionFactory.createContext();
+        JMSProducer producer = context.createProducer();
+        JMSConsumer consumer = context.createConsumer(queueRadnik2Server);
+        //return Response.ok("usao u ovo sranje", MediaType.TEXT_PLAIN).build();
+        try
+        {
+            ObjectMessage objectMessage = context.createObjectMessage();
+            objectMessage.setIntProperty("QueryNumber", 7);
+            objectMessage.setStringProperty("NazivOld", NazivOld);
+            objectMessage.setStringProperty("NazivNew", NazivNew);
+            producer.send(queueServerRadnik2, objectMessage);
+            Message message = consumer.receive();
+            if(message instanceof ObjectMessage && ((ObjectMessage)message).getObject() != null)
+            {
+                return Response.status(Response.Status.CREATED).entity("successful query 7 - Update Naziv.").build();
+            }
+        } 
+        catch (JMSException ex)
+        {
+            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        finally
+        {
+            consumer.close();
+        }
+        
+        return Response.serverError().build();
+    }
+    
+    @POST
+    @Path("query8/{Video}/{Kategorija}")
+    public Response updateKategorija(@PathParam("Video") String Video, @PathParam("Kategorija") String Kategorija)
+    {
+        JMSContext context = connectionFactory.createContext();
+        JMSProducer producer = context.createProducer();
+        JMSConsumer consumer = context.createConsumer(queueRadnik2Server);
+        //return Response.ok("usao u ovo sranje", MediaType.TEXT_PLAIN).build();
+        try
+        {
+            ObjectMessage objectMessage = context.createObjectMessage();
+            objectMessage.setIntProperty("QueryNumber", 8);
+            objectMessage.setStringProperty("Video", Video);
+            objectMessage.setStringProperty("Kategorija", Kategorija);
+            producer.send(queueServerRadnik2, objectMessage);
+            Message message = consumer.receive();
+            if(message instanceof ObjectMessage && ((ObjectMessage)message).getObject() != null)
+            {
+                return Response.status(Response.Status.CREATED).entity("successful query 8 - Update Kategorija.").build();
+            }
+        } 
+        catch (JMSException ex)
+        {
+            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        finally
+        {
+            consumer.close();
+        }
+        
+        return Response.serverError().build();
+    }
+    
+    @POST
+    @Path("query16/{Video}/{Korisnik}")
+    public Response deleteVideo(@PathParam("Video") String Video, @PathParam("Korisnik") String Korisnik)
+    {
+        JMSContext context = connectionFactory.createContext();
+        JMSProducer producer = context.createProducer();
+        JMSConsumer consumer = context.createConsumer(queueRadnik2Server);
+        //return Response.ok("usao u ovo sranje", MediaType.TEXT_PLAIN).build();
+        try
+        {
+            ObjectMessage objectMessage = context.createObjectMessage();
+            objectMessage.setIntProperty("QueryNumber", 16);
+            objectMessage.setStringProperty("Video", Video);
+            objectMessage.setStringProperty("Korisnik", Korisnik);
+            producer.send(queueServerRadnik2, objectMessage);
+            Message message = consumer.receive();
+            if(message instanceof ObjectMessage && ((ObjectMessage)message).getObject() != null)
+            {
+                return Response.status(Response.Status.CREATED).entity("successful query 16 - Delete Video.").build();
+            }
+        } 
+        catch (JMSException ex)
+        {
+            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        finally
+        {
+            consumer.close();
+        }
+        
+        return Response.serverError().build();
+    }
+    
     @GET
     @Path("query17")
     public Response getAllKorisnik()
@@ -260,6 +406,66 @@ public class Server
         }
         return Response.serverError().build();
     }
+    
+    @GET
+    @Path("query19")
+    public Response getAllKategorija()
+    {
+        System.err.println("USO U KAT");
+        JMSContext context = connectionFactory.createContext();
+        JMSProducer producer = context.createProducer();
+        JMSConsumer consumer = context.createConsumer(queueRadnik2Server);
+        try
+        {
+            ObjectMessage objectMessage = context.createObjectMessage();
+            objectMessage.setIntProperty("QueryNumber", 19);
+            producer.send(queueServerRadnik2, objectMessage);
+            Message message = consumer.receive();
+            if(message instanceof ObjectMessage && ((ObjectMessage)message).getObject() != null)
+            {
+                return Response.status(Response.Status.OK).entity(((ObjectMessage)message).getObject()).build();
+            }
+        } 
+        catch (JMSException ex)
+        {
+            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        finally
+        {
+            consumer.close();
+        }
+        return Response.serverError().build();
+    }
+    
+    @GET
+    @Path("query20")
+    public Response getAllVideo()
+    {
+        JMSContext context = connectionFactory.createContext();
+        JMSProducer producer = context.createProducer();
+        JMSConsumer consumer = context.createConsumer(queueRadnik2Server);
+        try
+        {
+            ObjectMessage objectMessage = context.createObjectMessage();
+            objectMessage.setIntProperty("QueryNumber", 20);
+            producer.send(queueServerRadnik2, objectMessage);
+            Message message = consumer.receive();
+            if(message instanceof ObjectMessage && ((ObjectMessage)message).getObject() != null)
+            {
+                return Response.status(Response.Status.OK).entity(((ObjectMessage)message).getObject()).build();
+            }
+        } 
+        catch (JMSException ex)
+        {
+            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        finally
+        {
+            consumer.close();
+        }
+        return Response.serverError().build();
+    }
+    
     
     @GET
     @Produces(MediaType.TEXT_PLAIN)

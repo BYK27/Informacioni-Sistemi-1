@@ -1,19 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<persistence version="2.2"
-             xmlns="http://xmlns.jcp.org/xml/ns/persistence"
-             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
-
+<persistence version="2.2" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
   <!-- Define Persistence Unit -->
   <persistence-unit name="my_persistence_unit" transaction-type="JTA">
     <jta-data-source>resource_podsistem1</jta-data-source>
-
     <class>entities.Korisnik</class>
     <class>entities.Mesto</class>
-    <exclude-unlisted-classes>false</exclude-unlisted-classes>
-   
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/podsistem1?zeroDateTimeBehavior=CONVERT_TO_NULL"/>
+      <property name="javax.persistence.jdbc.user" value="root"/>
+      <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
+      <property name="javax.persistence.jdbc.password" value="etf"/>
+    </properties>
+  </persistence-unit>
+  
+  <persistence-unit name="my_persistence_unit_2" transaction-type="JTA">
+    <jta-data-source>resource_podsistem1</jta-data-source>
+    <class>entities.Video</class>
+    <class>entities.Kategorija</class>
+    <properties>
+      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/podsistem2?zeroDateTimeBehavior=CONVERT_TO_NULL"/>
       <property name="javax.persistence.jdbc.user" value="root"/>
       <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
       <property name="javax.persistence.jdbc.password" value="etf"/>

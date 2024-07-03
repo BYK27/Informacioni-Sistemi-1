@@ -284,8 +284,6 @@ public class Main
         {
             List<Mesto> mestoList = entityManager.createNamedQuery("Mesto.findAll", Mesto.class).getResultList();
             List<Mesto> mestoListReturn = new ArrayList<>();
-            message.setObject((Serializable) mestoList);
-            message.setIntProperty("Status", 1);
             
             mestoList.forEach(mesto -> 
             {

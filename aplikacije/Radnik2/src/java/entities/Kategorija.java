@@ -31,17 +31,18 @@ import javax.xml.bind.annotation.XmlTransient;
 public class Kategorija implements Serializable 
 {
 
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 255)
+    @Column(name = "Naziv")
+    private String naziv;
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "idKategorija")
     private Integer idKategorija;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 255)
-    @Column(name = "Naziv")
-    private String naziv;
     @JoinTable(name = "videokategorija", joinColumns =
     {
         @JoinColumn(name = "idKategorija", referencedColumnName = "idKategorija")
@@ -77,15 +78,6 @@ public class Kategorija implements Serializable
         this.idKategorija = idKategorija;
     }
 
-    public String getNaziv()
-    {
-        return naziv;
-    }
-
-    public void setNaziv(String naziv)
-    {
-        this.naziv = naziv;
-    }
 
     @XmlTransient
     public List<Video> getVideoList()
@@ -126,6 +118,16 @@ public class Kategorija implements Serializable
     public String toString()
     {
         return "entities.Kategorija[ idKategorija=" + idKategorija + " ]";
+    }
+
+    public String getNaziv()
+    {
+        return naziv;
+    }
+
+    public void setNaziv(String naziv)
+    {
+        this.naziv = naziv;
     }
 
 }
