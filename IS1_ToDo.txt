@@ -1,0 +1,28 @@
+IS1 to do 
+[x] Make system1 base
+[x] Make system2 base
+[x] Make system3 base
+
+[ ] Make starUML diagrams
+
+[ ] Open Netbeans and start glassfish
+
+
+JMS - Java Messaging Service
+	Used for sending and receiving messages, has queues and topics. Radnik
+JPA - Java Persistence API
+	Used for mapping sql tables into Java classes. Klijent
+REST - Representational State Transfer
+	Used for operations on sql tables. Has @Path annotations. Server
+
+Java with Ant	-> Java Enterprise	-> Enterprise Application Client	//for JMS
+Java with Ant 	-> Java Application	//for JPA 
+Java with Maven -> Web Application	//for RESTful services
+
+
+Java with Ant	-> Java Enterprise	-> Enterprise Application Client
+Java with Ant 	-> Java Application
+Java with Maven -> Web Application
+
+
+Server -- (queueServerRadnik1) --> Radnik1 -- (queueRadnik1Server) --> Server
