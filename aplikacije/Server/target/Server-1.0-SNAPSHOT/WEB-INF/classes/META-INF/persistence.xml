@@ -24,4 +24,18 @@
       <property name="javax.persistence.jdbc.password" value="etf"/>
     </properties>
   </persistence-unit>
+  
+  <persistence-unit name="my_persistence_unit_3" transaction-type="JTA">
+    <jta-data-source>resource_podsistem1</jta-data-source>
+    <class>enentities.Gledanje</class>
+    <class>enentities.Ocena</class>
+    <class>enentities.Paket</class>
+    <class>enentities.Pretplata</class>
+    <properties>
+      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/podsistem3?zeroDateTimeBehavior=CONVERT_TO_NULL"/>
+      <property name="javax.persistence.jdbc.user" value="root"/>
+      <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
+      <property name="javax.persistence.jdbc.password" value="etf"/>
+    </properties>
+  </persistence-unit>
 </persistence>

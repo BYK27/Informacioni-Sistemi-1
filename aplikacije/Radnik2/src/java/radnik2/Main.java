@@ -30,6 +30,7 @@ import javax.jms.Queue;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.TypedQuery;
 
 /**
  *
@@ -108,6 +109,8 @@ public class Main
                     return getAllKategorija(objectMessage);
                 case 20:
                     return getAllVideo(objectMessage);
+                case 21:
+                    return getAllKategorijaByVideo(objectMessage);
         }
         
         return null;
@@ -312,7 +315,6 @@ public class Main
 
     private static ObjectMessage getAllKategorija(ObjectMessage objectMessage)
     {
-        System.err.println("Usao u kat");
         ObjectMessage message = context.createObjectMessage();
         try
         {
@@ -407,6 +409,62 @@ public class Main
             }
         }
         return message;
+    }
+    
+    private static ObjectMessage getAllKategorijaByVideo(ObjectMessage objectMessage)
+    {
+        ObjectMessage message = context.createObjectMessage();
+        try
+        {
+            
+            String Video = objectMessage.getStringProperty("Video");
+            Video video = entityManager.createNamedQuery("Video.findByNaziv", Video.class).setParameter("naziv", Video).getSingleResult();
+            
+            if(video != null)
+            {
+                List<Kategorija> kategorijaList = getKategorijaForVideo(video);
+                List<Kategorija> kategorijaListReturn = new ArrayList<>();
+
+                kategorijaList.forEach(kategorija -> 
+                {
+                    Kategorija k = new Kategorija();
+                    k.setIdKategorija(kategorija.getIdKategorija());
+                    k.setNaziv(kategorija.getNaziv());
+                    kategorijaListReturn.add(k);
+                });
+                message.setObject((Serializable) kategorijaListReturn);
+                message.setIntProperty("Status", 1);
+            }
+            else
+            {
+                System.err.println("IT IS NULL");
+                message.setIntProperty("Status", 0);
+            }
+            
+
+        } catch (JMSException ex)
+        {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            entityManager.getTransaction().rollback();
+            try {
+                message.setIntProperty("Status", 0); // Failure
+            } catch (JMSException e) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, e);
+            }
+        }
+        return message;
+    }
+    
+    private static List<Kategorija> getKategorijaForVideo(Video video) 
+    {
+        TypedQuery<Kategorija> query = entityManager.createQuery(
+        "SELECT k FROM Kategorija k JOIN k.videoList v WHERE v.idVideo = :idVideo", Kategorija.class);
+        query.setParameter("idVideo", video.getIdVideo());
+
+        List<Kategorija> kategorijaList = query.getResultList();
+
+        System.err.println(kategorijaList);
+        return kategorijaList;
     }
 
 }

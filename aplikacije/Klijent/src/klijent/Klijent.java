@@ -114,6 +114,27 @@ public class Klijent
             case 8:
                 updateKategorija();
                 break;
+            case 9:
+                createPaket();
+                break;
+            case 10:
+                updateCena();
+                break;
+            case 11:
+                createPretplata();
+                break;
+            case 12:
+                createGledanje();
+                break;
+            case 13:
+                createOcena();
+                break;
+            case 14:
+                updateOcena();
+                break;
+            case 15:
+                deleteOcena();
+                break;
             case 16:
                 deleteVideo();
                 break;
@@ -128,6 +149,21 @@ public class Klijent
                 break;
             case 20:
                 getAllVideo();
+                break;
+            case 21:
+                getAllKategorijaByVideo();
+                break;
+            case 22:
+                getAllPaket();
+                break;
+            case 23:
+                getAllPretplataByKorisnik();
+                break;
+            case 24:
+                getAllGledanjeByVideo();
+                break;
+            case 25:
+                getAllOcenaByVideo();
                 break;
             case -1:
                 test();
@@ -271,6 +307,193 @@ public class Klijent
         sendHttpRequest(urlString, "POST");
     }
     
+    private static void createPaket()
+    {
+        System.out.println("Kreiranje Paket zapoceto. ");
+        System.out.print("Naziv paketa: " );
+        String naziv = scanner.nextLine();
+        System.out.print("Cena paketa: " );
+        Double cena = scanner.nextDouble();
+        scanner.nextLine();
+        
+        String urlString = "http://localhost:8080/Server/api/server/query9/" + naziv + "/" + cena;
+        sendHttpRequest(urlString, "POST");
+    }
+    
+    private static void updateCena()
+    {
+        System.out.println("Azuiranje Cena zapoceto. ");
+        System.out.print("Naziv paketa: " );
+        String naziv = scanner.nextLine();
+        System.out.print("Nova cena paketa: " );
+        Double cena = scanner.nextDouble();
+        scanner.nextLine();
+        
+        String urlString = "http://localhost:8080/Server/api/server/query10/" + naziv + "/" + cena;
+        sendHttpRequest(urlString, "POST");
+    }
+    
+    private static void createPretplata()
+    {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        
+        System.out.println("Kreiranje Pretplata zapoceto. ");
+        System.out.print("Naziv korisnika: " );
+        String korisnik = scanner.nextLine();
+        System.out.print("Naziv paketa: " );
+        String paket = scanner.nextLine();
+        
+        System.out.print("Nova cena paketa: " );
+        Double cena = scanner.nextDouble();
+        scanner.nextLine();
+        
+        System.out.print("Datum pocetka pretplate (format: yyyy-MM-dd HH:mm:ss): ");
+        String datumString = scanner.nextLine();
+
+        Date datumPostavljanja = null;
+        try
+        {
+            datumPostavljanja = dateFormat.parse(datumString);
+            
+        } catch (ParseException ex)
+        {
+            System.out.println("Datum nije u ispravnom formatu. Pokušajte ponovo.");
+            return;
+        }
+        
+        String encodedDatumString = datumString;
+        
+        try
+        {
+            encodedDatumString = URLEncoder.encode(datumString, StandardCharsets.UTF_8.toString());
+        } catch (UnsupportedEncodingException ex)
+        {
+            Logger.getLogger(Klijent.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        String urlString = "http://localhost:8080/Server/api/server/query11/" + korisnik + "/" + paket + "/" + cena + "/" + encodedDatumString;
+        sendHttpRequest(urlString, "POST");
+    }
+    
+    private static void createGledanje()
+    {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        
+        System.out.println("Kreiranje Gledanje zapoceto. ");
+        System.out.print("Naziv korisnika: " );
+        String korisnik = scanner.nextLine();
+        System.out.print("Naziv videa: " );
+        String video = scanner.nextLine();
+
+        
+        System.out.print("Datum pocetka gledanja (format: yyyy-MM-dd HH:mm:ss): ");
+        String datumString = scanner.nextLine();
+
+        Date datumPostavljanja = null;
+        try
+        {
+            datumPostavljanja = dateFormat.parse(datumString);
+            
+        } catch (ParseException ex)
+        {
+            System.out.println("Datum nije u ispravnom formatu. Pokušajte ponovo.");
+            return;
+        }
+        
+        String encodedDatumString = datumString;
+        
+        try
+        {
+            encodedDatumString = URLEncoder.encode(datumString, StandardCharsets.UTF_8.toString());
+        } catch (UnsupportedEncodingException ex)
+        {
+            Logger.getLogger(Klijent.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        System.out.print("Sekund pocetka: " );
+        Integer SekundPocetka = scanner.nextInt();
+        scanner.nextLine();
+        
+        System.out.print("Sekund odgledano: " );
+        Integer SekundOdgledano = scanner.nextInt();
+        scanner.nextLine();
+        
+        String urlString = "http://localhost:8080/Server/api/server/query12/" + korisnik + "/" + video + "/" + encodedDatumString + "/" + SekundPocetka + "/" + SekundOdgledano;
+        sendHttpRequest(urlString, "POST");
+    }
+    
+    private static void createOcena()
+    {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        
+        System.out.println("Kreiranje Ocena zapoceto. ");
+        System.out.print("Naziv korisnika: " );
+        String korisnik = scanner.nextLine();
+        System.out.print("Naziv videa: " );
+        String video = scanner.nextLine();
+        
+        System.out.print("Ocena (1 - 5): " );
+        Integer ocena = scanner.nextInt();
+        scanner.nextLine();
+        
+        System.out.print("Datum pocetka gledanja (format: yyyy-MM-dd HH:mm:ss): ");
+        String datumString = scanner.nextLine();
+
+        Date datumPostavljanja = null;
+        try
+        {
+            datumPostavljanja = dateFormat.parse(datumString);
+            
+        } catch (ParseException ex)
+        {
+            System.out.println("Datum nije u ispravnom formatu. Pokušajte ponovo.");
+            return;
+        }
+        
+        String encodedDatumString = datumString;
+        
+        try
+        {
+            encodedDatumString = URLEncoder.encode(datumString, StandardCharsets.UTF_8.toString());
+        } catch (UnsupportedEncodingException ex)
+        {
+            Logger.getLogger(Klijent.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        String urlString = "http://localhost:8080/Server/api/server/query13/" + korisnik + "/" + video + "/" + ocena + "/" + encodedDatumString;
+        sendHttpRequest(urlString, "POST");
+    }
+    
+    private static void updateOcena()
+    {
+        
+        System.out.println("Azuriranje Ocena zapoceto. ");
+        System.out.print("Naziv korisnika: " );
+        String korisnik = scanner.nextLine();
+        System.out.print("Naziv videa: " );
+        String video = scanner.nextLine();
+        
+        System.out.print("Nova ocena (1 - 5): " );
+        Integer ocena = scanner.nextInt();
+        scanner.nextLine();
+        
+        String urlString = "http://localhost:8080/Server/api/server/query14/" + korisnik + "/" + video + "/" + ocena;
+        sendHttpRequest(urlString, "POST");
+    }
+    
+    private static void deleteOcena()
+    {
+        
+        System.out.println("Brisanje Ocena zapoceto. ");
+        System.out.print("Naziv korisnika: " );
+        String korisnik = scanner.nextLine();
+        System.out.print("Naziv videa: " );
+        String video = scanner.nextLine();
+        
+        String urlString = "http://localhost:8080/Server/api/server/query15/" + korisnik + "/" + video;
+        sendHttpRequest(urlString, "POST");
+    }
+    
     private static void deleteVideo()
     {
         System.out.println("Brisanje Video zapoceto. ");
@@ -304,6 +527,44 @@ public class Klijent
     private static void getAllVideo()
     {
         String urlString = "http://localhost:8080/Server/api/server/query20";
+        sendHttpRequest(urlString, "GET");
+    }
+    
+    private static void getAllKategorijaByVideo()
+    {
+        System.out.print("Naziv videa: " );
+        String video = scanner.nextLine();
+        String urlString = "http://localhost:8080/Server/api/server/query21/" + video;
+        sendHttpRequest(urlString, "GET");
+    }
+    
+    private static void getAllPaket()
+    {
+        String urlString = "http://localhost:8080/Server/api/server/query22";
+        sendHttpRequest(urlString, "GET");
+    }
+    
+    private static void getAllPretplataByKorisnik()
+    {
+        System.out.print("Naziv korisnika: " );
+        String korisnik = scanner.nextLine();
+        String urlString = "http://localhost:8080/Server/api/server/query23/" + korisnik;
+        sendHttpRequest(urlString, "GET");
+    }
+    
+    private static void getAllGledanjeByVideo()
+    {
+        System.out.print("Naziv videa: " );
+        String video = scanner.nextLine();
+        String urlString = "http://localhost:8080/Server/api/server/query24/" + video;
+        sendHttpRequest(urlString, "GET");
+    }
+    
+    private static void getAllOcenaByVideo()
+    {
+        System.out.print("Naziv videa: " );
+        String video = scanner.nextLine();
+        String urlString = "http://localhost:8080/Server/api/server/query25/" + video;
         sendHttpRequest(urlString, "GET");
     }
     
